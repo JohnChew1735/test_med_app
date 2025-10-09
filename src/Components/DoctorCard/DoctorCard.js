@@ -1,4 +1,3 @@
-// src/Components/DoctorCard/DoctorCard.js
 import React, { useState } from "react";
 import "./DoctorCard.css";
 import AppointmentForm from "../AppointmentForm/AppointmentForm";
@@ -6,6 +5,7 @@ import AppointmentForm from "../AppointmentForm/AppointmentForm";
 const DoctorCard = ({ name, speciality, experience, ratings, image }) => {
   const [showForm, setShowForm] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [appointmentData, setAppointmentData] = useState(null); // Track booked appointment
 
   const handleBookingClick = () => {
     setShowForm(true);
@@ -13,13 +13,14 @@ const DoctorCard = ({ name, speciality, experience, ratings, image }) => {
   };
 
   const handleFormSubmit = (formData) => {
-    console.log("Appointment Data:", {
-      ...formData,
-      doctorName: name,
-      doctorSpeciality: speciality,
-    });
+    setAppointmentData({ ...formData, doctorName: name, doctorSpeciality: speciality });
     setSubmitted(true);
-    setShowForm(false); // close form after submission
+    setShowForm(false);
+  };
+
+  const handleCancelAppointment = () => {
+    setAppointmentData(null);
+    setSubmitted(false);
   };
 
   return (
@@ -38,32 +39,51 @@ const DoctorCard = ({ name, speciality, experience, ratings, image }) => {
           Ratings: ⭐ {ratings}
         </div>
 
-        <div>
-          <button
-            className="book-appointment-btn"
-            onClick={handleBookingClick}
-          >
+        {/* Book Appointment button */}
+        {!appointmentData && (
+          <button className="book-appointment-btn" onClick={handleBookingClick}>
             <div>Book Appointment</div>
             <div>No Booking Fee</div>
           </button>
-        </div>
-
-        {/* ✅ Conditionally render form */}
-        {showForm && (
-        <div className="appointment-form-modal">
-            <AppointmentForm
-            doctorName={name}
-            doctorSpeciality={speciality}
-            onSubmit={handleFormSubmit}
-            onCancel={() => setShowForm(false)}
-            />
-        </div>
         )}
 
+        {/* Appointment Form Modal */}
+        {showForm && (
+          <div
+            className="appointment-form-modal"
+            onClick={() => setShowForm(false)}
+          >
+            <div onClick={(e) => e.stopPropagation()}>
+              <AppointmentForm
+                doctorName={name}
+                doctorSpeciality={speciality}
+                onSubmit={handleFormSubmit}
+                onCancel={() => setShowForm(false)}
+              />
+            </div>
+          </div>
+        )}
 
-        {/* ✅ Success message after form submission */}
-        {submitted && (
-          <p className="success-text">✅ Appointment booked successfully!</p>
+        {/* Success message + Cancel button */}
+        {submitted && appointmentData && (
+          <div>
+            <p className="success-text"> Appointment booked</p>
+            <button
+              className="cancel-appointment-btn"
+              onClick={handleCancelAppointment}
+              style={{
+                marginTop: "10px",
+                backgroundColor: "#dc3545",
+                color: "white",
+                padding: "10px",
+                borderRadius: "8px",
+                border: "none",
+                cursor: "pointer",
+              }}
+            >
+              Cancel Appointment
+            </button>
+          </div>
         )}
       </div>
     </div>
