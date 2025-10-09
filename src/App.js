@@ -2,6 +2,8 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./Components/Navbar/Navbar";
 import LandingPage from "./Components/Landing_Page/LandingPage";
+import SignUp from "./Components/Sign_up/Sign_Up";
+import Login from "./Components/Login/Login";
 import "./App.css";
 
 function App() {
@@ -10,7 +12,8 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<LandingPage/>}/>
-        {/* Example: <Route path="/" element={<Home />} /> */}
+        <Route path="/signup" element={<SignUp/>}/>
+        <Route path="/login" element={<Login/>}/>
       </Routes>
     </BrowserRouter>
   );
