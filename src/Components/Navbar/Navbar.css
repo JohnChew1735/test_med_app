@@ -28,3 +28,20 @@ body {
 .nav-links a:hover {
   color: #ffdd00;
 }
+
+.btn-outline,
+.btn-logout {
+  border: 1px solid #fff;
+  color: #fff;
+  background: transparent;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-logout:hover,
+.btn-outline:hover {
+  background: #fff;
+  color: #333;
+}

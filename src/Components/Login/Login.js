@@ -1,123 +1,68 @@
 import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { API_URL } from "../../config";
 import "./Login.css";
 
 const Login = () => {
-  // State variables for input values
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [err, setErr] = useState("");
+  const navigate = useNavigate();
 
-  // State variables for validation messages
-  const [errors, setErrors] = useState({});
-
-  // Validation function
-  const validateForm = () => {
-    const newErrors = {};
-
-    // Email validation
-    if (!email) {
-      newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = "Enter a valid email address";
-    }
-
-    // Password validation
-    if (!password) {
-      newErrors.password = "Password is required";
-    } else if (password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters long";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  // Submit handler
-  const handleSubmit = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      alert("Login successful!");
-      // Here you can add login API call later
+    setErr("");
+    if (!email || !password) {
+      setErr("Please enter both email and password");
+      return;
     }
-  };
+    try {
+      const res = await fetch(`${API_URL}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const json = await res.json();
 
-  // Reset handler
-  const handleReset = () => {
-    setEmail("");
-    setPassword("");
-    setErrors({});
+      if (json.authtoken) {
+        sessionStorage.setItem("auth-token", json.authtoken);
+        sessionStorage.setItem("email", email);
+        // optionally store name if returned by backend
+        if (json.name) sessionStorage.setItem("name", json.name);
+        navigate("/");
+        window.location.reload();
+      } else {
+        setErr(json.error || "Login failed");
+      }
+    } catch (error) {
+      setErr("Unable to contact server.");
+      console.error(error);
+    }
   };
 
   return (
-    <div className="container">
+    <div className="container" style={{ marginTop: "5%" }}>
       <div className="login-grid">
-        <div className="login-text">
-          <h2>Login</h2>
-        </div>
-
-        <div className="login-text">
-          Are you a new member?{" "}
-          <span>
-            <a href="/signup" style={{ color: "#2190FF" }}>
-              Sign Up Here
-            </a>
-          </span>
-        </div>
-
-        <br />
+        <div className="login-text"><h2>Login</h2></div>
+        <div className="login-text">New? <Link to="/signup">Sign Up Here</Link></div>
 
         <div className="login-form">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleLogin}>
             <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <input
-                type="email"
-                name="email"
-                id="email"
-                className="form-control"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              {errors.email && (
-                <p style={{ color: "red", fontSize: "14px" }}>{errors.email}</p>
-              )}
+              <label>Email</label>
+              <input className="form-control" type="email" value={email} onChange={e => setEmail(e.target.value)} required/>
+            </div>
+            <div className="form-group">
+              <label>Password</label>
+              <input className="form-control" type="password" value={password} onChange={e => setPassword(e.target.value)} required/>
             </div>
 
-            <div className="form-group">
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                name="password"
-                id="password"
-                className="form-control"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              {errors.password && (
-                <p style={{ color: "red", fontSize: "14px" }}>
-                  {errors.password}
-                </p>
-              )}
-            </div>
+            {err && <div style={{ color: "red" }}>{err}</div>}
 
             <div className="btn-group">
-              <button
-                type="submit"
-                className="btn btn-primary mb-2 mr-1 waves-effect waves-light"
-              >
-                Login
-              </button>
-              <button
-                type="button"
-                className="btn btn-danger mb-2 waves-effect waves-light"
-                onClick={handleReset}
-              >
-                Reset
-              </button>
+              <button type="submit" className="btn btn-primary">Login</button>
+              <button type="reset" className="btn btn-danger" onClick={() => { setEmail(""); setPassword(""); setErr(""); }}>Reset</button>
             </div>
-
-            <div className="login-text">Forgot Password?</div>
           </form>
         </div>
       </div>
