@@ -26,7 +26,12 @@ const DoctorCard = ({ name, speciality, experience, ratings, image }) => {
   return (
     <div className="doctor-card-container">
       <div className="doctor-card-profile-image-container">
-        <img src={image} alt={name} />
+        <img
+          src={
+            image || "https://t3.ftcdn.net/jpg/09/64/89/18/360_F_964891898_SuTIP6H2AVZkBuUG2cIpP9nvdixORKpM.jpg"
+          }
+          alt={name}
+        />
       </div>
 
       <div className="doctor-card-details-container">

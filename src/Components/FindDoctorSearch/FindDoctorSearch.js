@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "./FindDoctorSearch.css";
-import { useNavigate } from "react-router-dom";
 
 const SPECIALITIES = [
   "Dentist",
@@ -12,19 +11,19 @@ const SPECIALITIES = [
   "Ayurveda",
 ];
 
-const FindDoctorSearch = () => {
-  const [searchQuery, setSearchQuery] = useState("");
+const FindDoctorSearch = ({ searchTerm, setSearchTerm }) => {
   const [showResults, setShowResults] = useState(false);
-  const navigate = useNavigate();
 
+  // only navigate when the user clicks/selects from the list
   const handleSelect = (speciality) => {
-    setSearchQuery(speciality);
+    setSearchTerm(speciality);
     setShowResults(false);
-    navigate(`/instant-consultation?speciality=${encodeURIComponent(speciality)}`);
+    // optionally, you can trigger a function here to filter locally instead of navigating
+    // if you want routing, call navigate manually on a button click outside this component
   };
 
   const filteredSpecialities = SPECIALITIES.filter((s) =>
-    s.toLowerCase().includes(searchQuery.toLowerCase())
+    s.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -41,10 +40,10 @@ const FindDoctorSearch = () => {
               type="text"
               placeholder="Search doctors, clinics, hospitals, etc."
               className="search-input"
-              value={searchQuery}
+              value={searchTerm}
               onFocus={() => setShowResults(true)}
               onBlur={() => setTimeout(() => setShowResults(false), 150)}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
             <div className="search-icon-box">
               <img
@@ -61,7 +60,7 @@ const FindDoctorSearch = () => {
                     <div
                       className="result-item"
                       key={speciality}
-                      onMouseDown={() => handleSelect(speciality)}
+                      onMouseDown={() => handleSelect(speciality)} // only navigate here if desired
                     >
                       <span className="result-icon">
                         <img
