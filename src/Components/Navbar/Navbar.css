@@ -29,8 +29,7 @@ body {
   color: #ffdd00;
 }
 
-.btn-outline,
-.btn-logout {
+.btn-outline {
   border: 1px solid #fff;
   color: #fff;
   background: transparent;
@@ -40,8 +39,91 @@ body {
   transition: 0.3s;
 }
 
-.btn-logout:hover,
-.btn-outline:hover {
+.btn-logout:hover {
   background: #fff;
   color: #333;
+}
+/* Profile dropdown container */
+.profile-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* The button that shows the user's name */
+.profile-btn {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.profile-btn:hover {
+  color: #ffdd00;
+}
+
+/* The dropdown content */
+.dropdown-content {
+  position: absolute;
+  right: 0;
+  top: 50px;
+  background-color: #ffffff;
+  min-width: 220px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 10px;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+/* Inside dropdown buttons or links */
+.dropdown-content button,
+.dropdown-content a {
+  width: 100%;
+  border: none;
+  background: none;
+  color: #333;
+  text-align: center;
+  padding: 8px 0;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+}
+
+.dropdown-content button:hover,
+.dropdown-content a:hover {
+  background-color: #f2f2f2;
+}
+
+.dropdown-content .btn-logout {
+  background-color: #ff4d4f; /* soft red */
+  color: white;
+  border: none;
+  width: 100%;
+  padding: 8px 0;
+  border-radius: 6px;
+  font-weight: bold;
+  margin-top: 10px;
+  transition: background 0.3s ease, transform 0.1s ease;
+}
+
+.dropdown-content .btn-logout:hover {
+  background-color: #d9363e; /* darker red on hover */
+  transform: scale(1.03);
+}
+
+
+/* Add smooth fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

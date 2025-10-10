@@ -1,0 +1,37 @@
+.profile-card {
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 280px;
+    text-align: center;
+    padding: 20px;
+    transition: transform 0.3s ease;
+  }
+  
+  .profile-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .profile-card__image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  .profile-card__name {
+    font-size: 1.5rem;
+    margin: 10px 0 5px;
+    color: #333;
+  }
+  
+  .profile-card__email {
+    color: #777;
+    margin-bottom: 5px;
+  }
+  
+  .profile-card__role {
+    color: #555;
+    font-weight: bold;
+  }
+  

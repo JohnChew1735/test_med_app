@@ -1,0 +1,40 @@
+.profile-container {
+  width: 400px;
+  margin: 2rem auto;
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.profile-details p {
+  margin: 10px 0;
+}
+
+.profile-form label {
+  display: block;
+  margin: 10px 0;
+  text-align: left;
+}
+
+.profile-form input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.save-btn, .edit-btn {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background-color: #0077cc;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.save-btn:hover, .edit-btn:hover {
+  background-color: #005fa3;
+}

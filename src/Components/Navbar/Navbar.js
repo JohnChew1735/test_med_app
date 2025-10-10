@@ -1,38 +1,52 @@
 // src/Components/Navbar/Navbar.js
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import ProfileCard from "../ProfileCard/ProfileCard";
 import "./Navbar.css";
 
 const Navbar = () => {
-  const [user, setUser] = useState(null); // will hold display name
+  const [user, setUser] = useState(null);
+  const [email, setEmail] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const email = sessionStorage.getItem("email");
-    const name = sessionStorage.getItem("name");
-    if (email || name) {
-      // prefer stored name; otherwise take part before @ from email
-      const display = name || (email ? email.split("@")[0] : null);
-      setUser(display);
+    const storedEmail = sessionStorage.getItem("email");
+    const storedName = sessionStorage.getItem("name");
+    if (storedEmail || storedName) {
+      const displayName = storedName || (storedEmail ? storedEmail.split("@")[0] : "User");
+      setUser(displayName);
+      setEmail(storedEmail);
     } else {
       setUser(null);
+      setEmail("");
     }
   }, []);
 
   const handleLogout = () => {
-    // remove auth info and update UI
     sessionStorage.removeItem("auth-token");
     sessionStorage.removeItem("email");
     sessionStorage.removeItem("name");
     sessionStorage.removeItem("phone");
     setUser(null);
     navigate("/");
-    window.location.reload()
+    window.location.reload();
+  };
+
+  const toggleDropdown = () => {
+    setShowDropdown((prev) => !prev);
+  };
+
+  const goToProfile = () => {
+    setShowDropdown(false); // close dropdown
+    navigate("/profile");   // navigate to profile page
   };
 
   return (
     <nav className="navbar">
-      <div className="logo"><Link to="/">MediCare</Link></div>
+      <div className="logo">
+        <Link to="/">MediCare</Link>
+      </div>
 
       <div className="nav-links">
         <Link to="/">Home</Link>
@@ -40,16 +54,37 @@ const Navbar = () => {
         <Link to="/review">Reviews</Link>
 
         {user ? (
-          <>
-            <span className="nav-username" style={{ marginLeft: "1rem" }}>
-            Hi, {user}
-            </span>
-            <button className="btn-logout" onClick={handleLogout}>Logout</button>
-          </>
+          <div className="profile-dropdown">
+            <button className="profile-btn" onClick={toggleDropdown}>
+              Hi, {user} ▼
+            </button>
+
+            {showDropdown && (
+              <div className="dropdown-content">
+                {/* Make ProfileCard clickable */}
+                <div onClick={goToProfile} style={{ cursor: "pointer" }}>
+                  <ProfileCard
+                    name={user}
+                    email={email}
+                    image="https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png"
+                    role="Patient"
+                  />
+                </div>
+
+                <button className="btn-logout" onClick={handleLogout}>
+                  Logout
+                </button>
+              </div>
+            )}
+          </div>
         ) : (
           <>
-            <Link to="/signup" className="btn-outline">Sign Up</Link>
-            <Link to="/login" className="btn-outline">Login</Link>
+            <Link to="/signup" className="btn-outline">
+              Sign Up
+            </Link>
+            <Link to="/login" className="btn-outline">
+              Login
+            </Link>
           </>
         )}
       </div>
