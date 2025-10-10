@@ -23,23 +23,33 @@ const AppointmentForm = ({ doctorName, doctorSpeciality, onSubmit }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     const { name, phoneNumber, date, time } = formData;
 
     if (!name || !phoneNumber || !date || !time) {
-      setError("⚠️ Please fill out all fields before submitting.");
+      setError("Please fill out all fields before submitting.");
       return;
     }
 
     if (phoneNumber.length < 8) {
-      setError("⚠️ Phone number must be at least 8 digits.");
+      setError("Phone number must be at least 8 digits.");
       return;
     }
 
-    // Simulate form submission
+    // Save all appointment info in localStorage
+    const doctorData = { name: doctorName, speciality: doctorSpeciality };
+    const appointmentData = { patientName: name, phoneNumber, date, time };
+
+    localStorage.setItem("doctorData", JSON.stringify(doctorData));
+    localStorage.setItem("appointmentData", JSON.stringify(appointmentData));
+
+    console.log("Saved doctorData:", doctorData);
+    console.log("Saved appointmentData:", appointmentData);
+
     onSubmit?.(formData);
     setSuccess(true);
     setError("");
+
+    // Reset form
     setFormData({
       name: "",
       phoneNumber: "",
@@ -109,7 +119,7 @@ const AppointmentForm = ({ doctorName, doctorSpeciality, onSubmit }) => {
       </div>
 
       {error && <p className="error-text">{error}</p>}
-      {success && <p className="success-text">✅ Appointment booked successfully!</p>}
+      {success && <p className="success-text">Appointment booked successfully!</p>}
 
       <button type="submit" className="book-btn">
         Confirm Booking

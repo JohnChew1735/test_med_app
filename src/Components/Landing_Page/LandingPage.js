@@ -1,7 +1,7 @@
 import React from "react";
-import "./LandingPage.css"; // Import the CSS for styling
+import { Link } from "react-router-dom"; // ✅ Import Link
+import "./LandingPage.css";
 
-// Define the functional component
 const Landing_Page = () => {
   return (
     <section className="hero-section">
@@ -26,14 +26,14 @@ const Landing_Page = () => {
             quae ducimus. Suscipit omnis quibusdam non cum rem voluptatem!
           </h4>
 
-          <a href="#services">
+          {/* ✅ Use Link instead of anchor */}
+          <Link to="/booking-consultation">
             <button className="button">Get Started</button>
-          </a>
+          </Link>
         </div>
       </div>
     </section>
   );
 };
 
-// Export the component so it can be used in App.js
 export default Landing_Page;
