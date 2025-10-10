@@ -42,6 +42,11 @@ const Navbar = () => {
     navigate("/profile");   // navigate to profile page
   };
 
+    const goToReports = () => {
+        setShowDropdown(false); // close dropdown
+        navigate("/report");   // navigate to profile page
+    };
+
   return (
     <nav className="navbar">
       <div className="logo">
@@ -63,12 +68,10 @@ const Navbar = () => {
               <div className="dropdown-content">
                 {/* Make ProfileCard clickable */}
                 <div onClick={goToProfile} style={{ cursor: "pointer" }}>
-                  <ProfileCard
-                    name={user}
-                    email={email}
-                    image="https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_640.png"
-                    role="Patient"
-                  />
+                  <ProfileCard/>
+                </div>
+                <div onClick={goToReports} style={{ cursor: "pointer" }}>
+                  <p className="reports_Layout">My Reports</p>
                 </div>
 
                 <button className="btn-logout" onClick={handleLogout}>
