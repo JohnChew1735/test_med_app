@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { API_URL } from "../../config"; // ensure config.js exports your API base URL
+import { API_URL } from "../../config";
 import { useNavigate } from "react-router-dom";
 import "./ProfileForm.css";
 
 const ProfileForm = () => {
   const [userDetails, setUserDetails] = useState({ name: "", email: "", phone: "" });
   const [updatedDetails, setUpdatedDetails] = useState({ name: "", email: "", phone: "" });
+  const [errors, setErrors] = useState({});
   const [editMode, setEditMode] = useState(false);
   const navigate = useNavigate();
 
@@ -18,7 +19,6 @@ const ProfileForm = () => {
     }
   }, [navigate]);
 
-  // Fetch profile details
   const fetchUserProfile = async () => {
     try {
       const authtoken = sessionStorage.getItem("auth-token");
@@ -43,10 +43,11 @@ const ProfileForm = () => {
     }
   };
 
-  // Enable edit mode
-  const handleEdit = () => setEditMode(true);
+  const handleEdit = () => {
+    setErrors({});
+    setEditMode(true);
+  };
 
-  // Handle input changes
   const handleInputChange = (e) => {
     setUpdatedDetails({
       ...updatedDetails,
@@ -54,9 +55,34 @@ const ProfileForm = () => {
     });
   };
 
-  // Submit changes
+  // ✅ Validate before submitting
+  const validateForm = () => {
+    let newErrors = {};
+
+    if (!updatedDetails.name.trim()) {
+      newErrors.name = "Name is required.";
+    }
+
+    if (!updatedDetails.phone.trim()) {
+      newErrors.phone = "Phone number is required.";
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (updatedDetails.email && !emailPattern.test(updatedDetails.email)) {
+      newErrors.email = "Invalid email address.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return; // Stop here if validation fails
+    }
+
     try {
       const authtoken = sessionStorage.getItem("auth-token");
       const email = sessionStorage.getItem("email");
@@ -83,6 +109,7 @@ const ProfileForm = () => {
       }
     } catch (error) {
       console.error(error);
+      alert("An error occurred while updating your profile.");
     }
   };
 
@@ -91,9 +118,11 @@ const ProfileForm = () => {
       {editMode ? (
         <form onSubmit={handleSubmit} className="profile-form">
           <h2>Edit Profile</h2>
+
           <label>
             Email:
             <input type="email" name="email" value={userDetails.email} disabled />
+            {errors.email && <p className="error">{errors.email}</p>}
           </label>
 
           <label>
@@ -104,6 +133,7 @@ const ProfileForm = () => {
               value={updatedDetails.name}
               onChange={handleInputChange}
             />
+            {errors.name && <p className="error">{errors.name}</p>}
           </label>
 
           <label>
@@ -114,11 +144,10 @@ const ProfileForm = () => {
               value={updatedDetails.phone}
               onChange={handleInputChange}
             />
+            {errors.phone && <p className="error">{errors.phone}</p>}
           </label>
 
-          <button type="submit" className="save-btn">
-            Save
-          </button>
+          <button type="submit" className="save-btn">Save</button>
         </form>
       ) : (
         <div className="profile-details">

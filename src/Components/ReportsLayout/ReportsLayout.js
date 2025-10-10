@@ -19,12 +19,12 @@ function ReportsLayout() {
     getDoctorsDetails();
   }, []);
 
-  const handleViewReport = (doctorName) => {
-    alert(`Viewing report for ${doctorName}`);
-  };
+  // File path (in public folder)
+  const reportPath = "/patient_report.pdf";
 
-  const handleDownloadReport = (doctorName) => {
-    alert(`Downloading report for ${doctorName}`);
+  const handleViewReport = () => {
+    // Open the report in a new tab
+    window.open(reportPath, "_blank");
   };
 
   return (
@@ -47,20 +47,14 @@ function ReportsLayout() {
               <td>{doctor.name}</td>
               <td>{doctor.speciality}</td>
               <td>
-                <button
-                  className="btn-view"
-                  onClick={() => handleViewReport(doctor.name)}
-                >
+                <button className="btn-view" onClick={handleViewReport}>
                   View
                 </button>
               </td>
               <td>
-                <button
-                  className="btn-download"
-                  onClick={() => handleDownloadReport(doctor.name)}
-                >
-                  Download
-                </button>
+                <a href={reportPath} download={`Report_${doctor.name}.pdf`}>
+                  <button className="btn-download">Download</button>
+                </a>
               </td>
             </tr>
           ))}
