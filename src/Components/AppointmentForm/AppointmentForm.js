@@ -35,15 +35,24 @@ const AppointmentForm = ({ doctorName, doctorSpeciality, onSubmit }) => {
       return;
     }
 
-    // Save all appointment info in localStorage
     const doctorData = { name: doctorName, speciality: doctorSpeciality };
-    const appointmentData = { patientName: name, phoneNumber, date, time };
+    const newAppointment = {
+      id: Date.now(),
+      patientName: name,
+      phoneNumber,
+      date,
+      time,
+      doctor: doctorData,
+    };
 
-    localStorage.setItem("doctorData", JSON.stringify(doctorData));
-    localStorage.setItem("appointmentData", JSON.stringify(appointmentData));
+    const existingAppointments =
+      JSON.parse(localStorage.getItem("appointments")) || [];
 
-    console.log("Saved doctorData:", doctorData);
-    console.log("Saved appointmentData:", appointmentData);
+    const updatedAppointments = [...existingAppointments, newAppointment];
+
+    localStorage.setItem("appointments", JSON.stringify(updatedAppointments));
+
+    console.log("Saved appointment:", newAppointment);
 
     onSubmit?.(formData);
     setSuccess(true);
